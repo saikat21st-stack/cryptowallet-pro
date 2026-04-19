@@ -1,0 +1,159 @@
+// Version: 1.0.0
+type CryptoAsset__284154092 =
+  {
+    name : Text;
+    var price : Float;
+    var priceChangePercent : Float;
+    symbol : CryptoSymbol__379129502
+  };
+type CryptoSymbol__379129502 = Text;
+type Data__159895909<T> = {var count : Nat__490723111; elements : [var ?T]};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type FaqEntry__991379878 =
+  {
+    var answer : Text;
+    var category : Text;
+    createdAt : Timestamp__301639476;
+    id : Nat;
+    var question : Text
+  };
+type Holding__300230247 =
+  {
+    var quantity : Float;
+    symbol : CryptoSymbol__379129502;
+    userId : UserId__158757552
+  };
+type Internal__667636161<T> =
+  {children : [var ?Node__92254746<T>]; data : Data__159895909<T>};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__520550824<T> = {data : Data__159895909<T>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Node__92254746<T> =
+  {#internal : Internal__667636161<T>; #leaf : Leaf__520550824<T>};
+type Role__300349085 = {#admin; #customer};
+type TicketReply__202632507 =
+  {
+    authorId : UserId__158757552;
+    isAdmin : Bool;
+    message : Text;
+    timestamp : Timestamp__301639476
+  };
+type TicketStatus__648101983 = {#closed; #in_progress; #open};
+type Ticket__1011436516 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Nat;
+    message : Text;
+    var replies : [TicketReply__202632507];
+    var status : TicketStatus__648101983;
+    subject : Text;
+    userId : UserId__158757552
+  };
+type Timestamp__301639476 = Int;
+type TradeOrder__324158656 =
+  {
+    id : Nat;
+    price : Float;
+    quantity : Float;
+    symbol : CryptoSymbol__379129502;
+    timestamp : Timestamp__301639476;
+    total : Float;
+    tradeType : TradeType__121797951;
+    userId : UserId__158757552
+  };
+type TradeType__121797951 = {#buy; #sell};
+type Transaction__822992244 =
+  {
+    amount : Float;
+    description : Text;
+    id : Nat;
+    timestamp : Timestamp__301639476;
+    txType : TxType__274971688;
+    userId : UserId__158757552
+  };
+type TransferStatus__345929038 = {#completed; #failed; #pending};
+type Transfer__1065491071 =
+  {
+    amount : Float;
+    id : Nat;
+    status : TransferStatus__345929038;
+    symbol : CryptoSymbol__379129502;
+    timestamp : Timestamp__301639476;
+    toAddress : Text;
+    userId : UserId__158757552
+  };
+type TxType__274971688 = {#bonus; #deposit; #trade; #transfer};
+type UserId__158757552 = Principal;
+type UserStatus__418351110 = {#active; #suspended};
+type User__98118558 =
+  {
+    createdAt : Timestamp__301639476;
+    id : UserId__158757552;
+    var passwordHash : Text;
+    role : Role__300349085;
+    var status : UserStatus__418351110;
+    var usdBalance : Float;
+    var username : Text
+  };
+actor {
+  stable assets :
+    {
+      var root :
+        Node__46230540<CryptoSymbol__379129502, CryptoAsset__284154092>;
+      var size : Nat__490723111
+    };
+  stable bonusRecipients :
+    {var root : Node__92254746<UserId__158757552>; var size : Nat__490723111};
+  stable faqs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?FaqEntry__991379878]];
+      var elementIndex : Nat__490723111
+    };
+  stable holdings :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Holding__300230247]];
+      var elementIndex : Nat__490723111
+    };
+  stable var nextFaqId : Nat;
+  stable var nextOrderId : Nat;
+  stable var nextTicketId : Nat;
+  stable var nextTransferId : Nat;
+  stable orders :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?TradeOrder__324158656]];
+      var elementIndex : Nat__490723111
+    };
+  stable tickets :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Ticket__1011436516]];
+      var elementIndex : Nat__490723111
+    };
+  stable transactions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Transaction__822992244]];
+      var elementIndex : Nat__490723111
+    };
+  stable transfers :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Transfer__1065491071]];
+      var elementIndex : Nat__490723111
+    };
+  stable users :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?User__98118558]];
+      var elementIndex : Nat__490723111
+    }
+};

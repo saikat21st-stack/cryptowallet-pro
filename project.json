@@ -1,0 +1,25 @@
+{
+  "overview": "A full-featured crypto wallet simulator with paper trading, portfolio management, simulated transfers, admin dashboard, and customer support — supporting 20+ major cryptocurrencies.",
+  "features": [
+    "Portfolio dashboard with 20+ crypto assets",
+    "Paper trading — buy and sell with simulated balance",
+    "Send crypto to any wallet address (simulated)",
+    "Full transaction history with status tracking",
+    "Admin dashboard for user and transaction management",
+    "Customer support with FAQ and ticket system",
+    "Role-based access control (user vs admin)",
+    "Real-time price simulation for all assets"
+  ],
+  "category": "finance",
+  "tags": [
+    "crypto",
+    "wallet",
+    "trading",
+    "portfolio",
+    "admin",
+    "finance",
+    "defi",
+    "simulator"
+  ],
+  "last_updated": "2026-04-19T17:22:46.836Z"
+}

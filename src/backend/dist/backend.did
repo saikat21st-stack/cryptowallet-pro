@@ -1,0 +1,231 @@
+type UserStatus = 
+ variant {
+   active;
+   suspended;
+ };
+type UserPublic = 
+ record {
+   createdAt: Timestamp;
+   id: UserId;
+   role: Role;
+   status: UserStatus;
+   usdBalance: float64;
+   username: text;
+ };
+type UserId = principal;
+type UpdateFaqRequest = 
+ record {
+   answer: text;
+   category: text;
+   id: nat;
+   question: text;
+ };
+type TxType = 
+ variant {
+   bonus;
+   deposit;
+   trade;
+   transfer;
+ };
+type TransferStatus = 
+ variant {
+   completed;
+   failed;
+   pending;
+ };
+type Transfer = 
+ record {
+   amount: float64;
+   id: nat;
+   status: TransferStatus;
+   symbol: CryptoSymbol;
+   timestamp: Timestamp;
+   toAddress: text;
+   userId: UserId;
+ };
+type Transaction = 
+ record {
+   amount: float64;
+   description: text;
+   id: nat;
+   timestamp: Timestamp;
+   txType: TxType;
+   userId: UserId;
+ };
+type TradeType = 
+ variant {
+   buy;
+   sell;
+ };
+type TradeOrder = 
+ record {
+   id: nat;
+   price: float64;
+   quantity: float64;
+   symbol: CryptoSymbol;
+   timestamp: Timestamp;
+   total: float64;
+   tradeType: TradeType;
+   userId: UserId;
+ };
+type Timestamp = int;
+type TicketStatus = 
+ variant {
+   closed;
+   in_progress;
+   open;
+ };
+type TicketReply = 
+ record {
+   authorId: UserId;
+   isAdmin: bool;
+   message: text;
+   timestamp: Timestamp;
+ };
+type TicketPublic = 
+ record {
+   createdAt: Timestamp;
+   id: nat;
+   message: text;
+   replies: vec TicketReply;
+   status: TicketStatus;
+   subject: text;
+   userId: UserId;
+ };
+type SendCryptoResult = 
+ variant {
+   err: text;
+   ok: Transfer;
+ };
+type SendCryptoRequest = 
+ record {
+   amount: float64;
+   symbol: CryptoSymbol;
+   toAddress: text;
+ };
+type Role = 
+ variant {
+   admin;
+   customer;
+ };
+type ReplyTicketRequest = 
+ record {
+   message: text;
+   ticketId: nat;
+ };
+type RegisterRequest = 
+ record {
+   passwordHash: text;
+   username: text;
+ };
+type PlaceOrderResult = 
+ variant {
+   err: text;
+   ok: TradeOrder;
+ };
+type PlaceOrderRequest = 
+ record {
+   quantity: float64;
+   symbol: CryptoSymbol;
+   tradeType: TradeType;
+ };
+type HoldingPublic = 
+ record {
+   currentPrice: float64;
+   currentValue: float64;
+   quantity: float64;
+   symbol: CryptoSymbol;
+ };
+type FaqEntryPublic = 
+ record {
+   answer: text;
+   category: text;
+   createdAt: Timestamp;
+   id: nat;
+   question: text;
+ };
+type DepositResult = 
+ record {
+   bonusEarned: float64;
+   depositAmount: float64;
+   newBalance: float64;
+ };
+type CryptoSymbol = text;
+type CryptoAssetPublic = 
+ record {
+   name: text;
+   price: float64;
+   priceChangePercent: float64;
+   symbol: CryptoSymbol;
+ };
+type CreateTicketRequest = 
+ record {
+   message: text;
+   subject: text;
+ };
+type CreateFaqRequest = 
+ record {
+   answer: text;
+   category: text;
+   question: text;
+ };
+service : {
+  adminAdjustUserBalance: (targetId: UserId, newBalance: float64) ->
+   (variant {
+      err: text;
+      ok;
+    });
+  adminGetAllOrders: () -> (vec TradeOrder) query;
+  adminGetAllTickets: () -> (vec TicketPublic) query;
+  adminGetAllTransactions: () -> (vec Transaction) query;
+  adminGetAllUsers: () -> (vec UserPublic) query;
+  adminSuspendUser: (targetId: UserId) -> (variant {
+                                             err: text;
+                                             ok;
+                                           });
+  adminUnsuspendUser: (targetId: UserId) -> (variant {
+                                               err: text;
+                                               ok;
+                                             });
+  adminUpdateTicketStatus: (ticketId: nat, status: TicketStatus) ->
+   (variant {
+      err: text;
+      ok;
+    });
+  createFaq: (req: CreateFaqRequest) ->
+   (variant {
+      err: text;
+      ok: FaqEntryPublic;
+    });
+  createTicket: (req: CreateTicketRequest) -> (TicketPublic);
+  deleteFaq: (id: nat) -> (variant {
+                             err: text;
+                             ok;
+                           });
+  deposit: (amount: float64) -> (variant {
+                                   err: text;
+                                   ok: DepositResult;
+                                 });
+  getAllAssets: () -> (vec CryptoAssetPublic) query;
+  getAllFaq: () -> (vec FaqEntryPublic) query;
+  getMyHoldings: () -> (vec HoldingPublic) query;
+  getMyOrders: () -> (vec TradeOrder) query;
+  getMyProfile: () -> (opt UserPublic) query;
+  getMyTickets: () -> (vec TicketPublic) query;
+  getMyTransactionHistory: () -> (vec Transaction) query;
+  getMyTransfers: () -> (vec Transfer) query;
+  placeOrder: (req: PlaceOrderRequest) -> (PlaceOrderResult);
+  register: (req: RegisterRequest) -> (variant {
+                                         err: text;
+                                         ok: UserPublic;
+                                       });
+  replyToTicket: (req: ReplyTicketRequest) -> (variant {
+                                                 err: text;
+                                                 ok;
+                                               });
+  sendCrypto: (req: SendCryptoRequest) -> (SendCryptoResult);
+  updateFaq: (req: UpdateFaqRequest) -> (variant {
+                                           err: text;
+                                           ok;
+                                         });
+}
